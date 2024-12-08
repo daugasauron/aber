@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "aber"
+version = "0.1.0"
+description = ""
+authors = ["me"]
+readme = "README.md"
+include = [
+    { path = "aber/", format = "sdist" },
+    { path = "lib/*", format = "wheel" },
+]
+
+[tool.poetry.build]
+script = "build.py"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core", "ziglang==0.13.0"]
+build-backend = "poetry.core.masonry.api"
