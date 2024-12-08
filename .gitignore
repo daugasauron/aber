@@ -1,5 +1,9 @@
 .github
+.zig-cache
+.venv
+.DS_Store
 __pycache__/
 lib
+dist
 build.zig
 poetry.lock

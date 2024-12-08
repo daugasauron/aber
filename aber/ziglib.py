@@ -1,11 +1,11 @@
 import os
 import builtins
 import platform
+from importlib.util import find_spec
 from ctypes import CDLL, POINTER, c_char, c_char_p, c_int, create_string_buffer
 from inspect import signature, Parameter
 from typing import Set, Callable, Any
 
-LIB_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 
 def _annotation_to_c_type(type_annotation): 
     match type_annotation:
@@ -20,7 +20,7 @@ def _annotation_to_c_type(type_annotation):
 class ZigLib:
     lib: CDLL
 
-    def __init__(self, lib_name: str):
+    def __init__(self, package_name: str, lib_name: str):
 
         match platform.system():
             case 'Darwin':
@@ -30,7 +30,7 @@ class ZigLib:
             case _:
                 name = f'lib{lib_name}.so'
 
-        self.lib = CDLL(os.path.join(LIB_DIR, name))
+        self.lib = CDLL(os.path.join(os.path.dirname(find_spec(package_name).origin), name))
         self.initialized = set()
 
     def initialize(self, func: Callable) -> None:
