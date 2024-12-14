@@ -1,1 +1,4 @@
-yeah yeah yeah
+```
+pip install aber
+python -m aber.hello
+```
