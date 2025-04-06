@@ -1,7 +1,7 @@
 import os
 from aber.ziglib import ZigLib, zig_function
 
-hello_lib = ZigLib('aber', 'hello')
+hello_lib = ZigLib('hello')
 
 @zig_function(hello_lib)
 def zig_add(a: int, b: int) -> int:

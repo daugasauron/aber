@@ -3,7 +3,7 @@
 .venv
 .DS_Store
 __pycache__/
-lib
+tmp
 dist
-build.zig
 poetry.lock
+zig/zig-out

@@ -28,47 +28,39 @@ def build_wheel(
         config_settings: dict[str, Any] | None = None, 
         metadata_directory: str | None = None
 ) -> str:
+
     res = pb.build_wheel(wheel_directory, config_settings, metadata_directory)
-
-    with open(os.path.join(metadata_directory, 'METADATA')) as f:
-        metadata_lines = f.readlines()
-
-    name = read_value('Name', metadata_lines)
-    version = read_value('Version', metadata_lines)
+    name, version, *_ = res.split('-')
 
     with tempfile.TemporaryDirectory() as temp_dir:
         wheel = os.path.join(wheel_directory, res)
         with ZipFile(wheel, 'r') as zf:
-            print(zf.namelist())
             zf.extractall(temp_dir)
         
         os.remove(wheel)
 
-        hashes = []       
-        with tempfile.TemporaryDirectory() as zig_build_dir:
-            for file in os.listdir(os.path.join(temp_dir, 'zig')):
-                subprocess.call([
-                    sys.executable, 
-                    '-m', 
-                    'ziglang', 
-                    'build-lib', 
-                    os.path.join(temp_dir, 'zig', file) 
-                    ,'-dynamic'
-                ], cwd=zig_build_dir)
-            shutil.rmtree(os.path.join(temp_dir, 'zig'))
+        subprocess.call([
+            sys.executable,
+            '-m',
+            'ziglang',
+            'build',
+        ], cwd=os.path.join(temp_dir, 'zig'))
 
-            for x in os.listdir(zig_build_dir):
-                src = os.path.join(zig_build_dir, x)
-                tgt = os.path.join(temp_dir, name, x)
-                shutil.move(src, tgt)
-                hashes.append(f'{os.path.join(name, x)},sha256={sha256_file_b64_nopad(tgt)},{os.path.getsize(tgt)}{os.linesep}')
+        shutil.rmtree(os.path.join(temp_dir, 'zig', '.zig-cache'))
+
+        print(os.listdir(os.path.join(temp_dir, 'zig', 'zig-out')))
+
+        lib_dir = os.path.join(temp_dir, 'zig', 'zig-out', 'lib')
+        hashes = []
+        for x in os.listdir(lib_dir):
+            tgt = os.path.join(lib_dir, x)
+            hashes.append(f'{os.path.join(name, x)},sha256={sha256_file_b64_nopad(tgt)},{os.path.getsize(tgt)}{os.linesep}')
 
         with open(os.path.join(temp_dir, f'{name}-{version}.dist-info', 'RECORD'), 'a') as f:
             f.writelines(hashes)
 
         shutil.make_archive(wheel, 'zip', temp_dir)
         shutil.move(f'{wheel}.zip', wheel)
-        print(os.listdir(wheel_directory))
 
     return res
 

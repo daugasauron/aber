@@ -1,4 +1,5 @@
 import os
+import zig
 import builtins
 import platform
 from importlib.util import find_spec
@@ -20,7 +21,7 @@ def _annotation_to_c_type(type_annotation):
 class ZigLib:
     lib: CDLL
 
-    def __init__(self, package_name: str, lib_name: str):
+    def __init__(self, lib_name: str):
 
         match platform.system():
             case 'Darwin':
@@ -29,8 +30,8 @@ class ZigLib:
                 name = f'{lib_name}.dll'
             case _:
                 name = f'lib{lib_name}.so'
-
-        self.lib = CDLL(os.path.join(os.path.dirname(find_spec(package_name).origin), name))
+        
+        self.lib = CDLL(os.path.join(os.path.dirname(find_spec('zig').origin), 'zig-out', 'lib', name))
         self.initialized = set()
 
     def initialize(self, func: Callable) -> None:

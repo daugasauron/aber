@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aber"
-version = "0.1.8"
+version = "0.1.14"
 description = ""
 authors = ["me"]
 readme = "README.md"
@@ -11,8 +11,7 @@ include = [
     { path = "zig/", format = "wheel" },
 ]
 
-
 [build-system]
-requires = ["poetry-core", "ziglang==0.13.0"]
+requires = ["poetry-core", "ziglang==0.14.0"]
 backend-path = ["backend"]
 build-backend = "zigbuilder"
