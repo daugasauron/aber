@@ -1,14 +1,23 @@
+### Description
+
+Create bindings for zig -> python. 
+
+When installing from pip, uses ziglang python package that contains zig to compile the source locally.
+
 ### install
 
 ```
 pip install aber
-python -m aber.hello
 ```
 
 ### local dev
 
 ```
 cd zig && python -m ziglang build && cd ..
+```
+
+```
+python generate_bindings.py
 ```
 
 #### Debug build step

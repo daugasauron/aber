@@ -6,4 +6,4 @@ __pycache__/
 tmp
 dist
 poetry.lock
-aber/lib
+zig/zig-out
