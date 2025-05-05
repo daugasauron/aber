@@ -4,6 +4,10 @@ export fn zig_add(a: i32, b: i32) i32 {
     return a + b;
 }
 
+export fn zig_mult(a: i32, b: i32) i32 {
+    return a * b;
+}
+
 export fn zig_hello(str: [*:0]const u8) [*:0]const u8 {
     const hello: []const u8 = "Hello ";
     const slice: []const u8 = str[0..std.mem.len(str)];
